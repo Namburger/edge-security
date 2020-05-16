@@ -19,7 +19,6 @@ detector = Detector(config['tflite']['model'],
 
 labels = config['tflite']['labels']
 src0 = config['cameras'].getint('src0')
-src1 = config['cameras'].getint('src1')
 threshold = config['cameras'].getfloat('threshold')
 
 @app.route('/')
@@ -32,9 +31,9 @@ def gen(camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-@app.route('/video_feed/<device>')
-def video_feed(device):
-    return Response(gen(VideoCamera(int(device), threshold, labels, detector)),
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen(VideoCamera(int(src0), threshold, labels, detector)),
         mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
